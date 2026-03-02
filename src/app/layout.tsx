@@ -1,36 +1,18 @@
 import type { Metadata } from 'next'
-import { Inter, Newsreader, Caveat } from 'next/font/google'
-import './globals.css'
-import { ThemeProvider } from '@/components/theme-provider'
 import { Header } from '@/components/header'
 import { Footer } from '@/components/footer'
-
-const inter = Inter({ 
-  subsets: ['latin'],
-  variable: '--font-sans',
-})
-
-const newsreader = Newsreader({
-  subsets: ['latin'],
-  variable: '--font-heading',
-})
-
-const caveat = Caveat({
-  subsets: ['latin'],
-  variable: '--font-display',
-})
+import './globals.css'
 
 export const metadata: Metadata = {
   title: "Mighty Mike's Odd Jobs | Adams County, WI",
-  description: 'One Guy. Mighty Results. Local yard cleanup, weeding, mulching, window washing, and odd jobs in Adams County, Wisconsin.',
-  keywords: ['odd jobs', 'yard work', 'lawn care', 'Adams County', 'Wisconsin', 'handyman'],
-  authors: [{ name: "Mighty Mike's Odd Jobs" }],
+  description: 'One guy. Honest work. Mighty results. Yard cleanup, weeding, mulching, window washing, and more. Serving Adams County, Wisconsin.',
+  keywords: ['yard work', 'odd jobs', 'Adams County', 'Wisconsin', 'landscaping', 'handyman'],
+  authors: [{ name: 'Mighty Mike' }],
   openGraph: {
-    title: "Mighty Mike's Odd Jobs | Adams County, WI",
-    description: 'One Guy. Mighty Results. Local yard work and odd jobs.',
+    title: "Mighty Mike's Odd Jobs",
+    description: 'One guy. Honest work. Mighty results.',
     type: 'website',
     locale: 'en_US',
-    url: 'https://mightymikesoddjobs.com',
   },
 }
 
@@ -40,19 +22,11 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="en" suppressHydrationWarning>
-      <body className={`${inter.variable} ${newsreader.variable} ${caveat.variable} font-sans antialiased`}>
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="system"
-          enableSystem
-          disableTransitionOnChange
-        >
-          <div className="noise-overlay" aria-hidden="true" />
-          <Header />
-          <main>{children}</main>
-          <Footer />
-        </ThemeProvider>
+    <html lang="en" className="scroll-smooth">
+      <body className="bg-cream text-wood-dark overflow-x-hidden">
+        <Header />
+        {children}
+        <Footer />
       </body>
     </html>
   )

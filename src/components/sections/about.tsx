@@ -1,126 +1,93 @@
 'use client'
 
-import { CheckCircle2 } from 'lucide-react'
+import { useEffect, useRef, useState } from 'react'
 
 const features = [
-  {
-    title: 'Reliable',
-    description: 'Always on time, every time'
-  },
-  {
-    title: 'Fair Prices',
-    description: 'Honest quotes, no surprises'
-  },
-  {
-    title: '100% Local',
-    description: 'Your neighbor, not a corporation'
-  }
+  { label: "Always On Time", sub: "Reliability you can count on" },
+  { label: "Fair Prices", sub: "Honest quotes, no surprises" },
+  { label: "100% Local", sub: "Your neighbor, not a corporation" },
+  { label: "Pay When Happy", sub: "Satisfaction guaranteed" },
 ]
+
+function useInView(threshold = 0.15) {
+  const ref = useRef<HTMLDivElement>(null)
+  const [inView, setInView] = useState(false)
+
+  useEffect(() => {
+    const obs = new IntersectionObserver(
+      ([e]) => {
+        if (e.isIntersecting) {
+          setInView(true)
+          obs.disconnect()
+        }
+      },
+      { threshold }
+    )
+    if (ref.current) obs.observe(ref.current)
+    return () => obs.disconnect()
+  }, [])
+
+  return [ref, inView] as const
+}
+
+function FadeIn({ children, delay = 0 }: { children: React.ReactNode; delay?: number }) {
+  const [ref, inView] = useInView()
+  
+  return (
+    <div
+      ref={ref}
+      style={{
+        opacity: inView ? 1 : 0,
+        transform: inView ? 'translateY(0)' : 'translateY(32px)',
+        transition: `opacity 0.8s ease ${delay}s, transform 0.8s ease ${delay}s`,
+      }}
+    >
+      {children}
+    </div>
+  )
+}
 
 export function AboutSection() {
   return (
-    <section id="about" className="py-24 bg-muted/30">
-      <div className="container mx-auto px-4">
-        <div className="grid lg:grid-cols-2 gap-12 items-center max-w-6xl mx-auto">
-          {/* Illustration */}
-          <div className="relative order-2 lg:order-1">
-            <div className="relative bg-card rounded-3xl p-8 shadow-lg border border-border">
-              <svg viewBox="0 0 400 400" className="w-full h-auto">
-                {/* Sun */}
-                <g className="animate-pulse">
-                  <circle cx="320" cy="80" r="40" className="fill-yellow-400" />
-                  <g className="origin-center animate-spin [animation-duration:20s]">
-                    <line x1="320" y1="20" x2="320" y2="0" stroke="#fbbf24" strokeWidth="3" />
-                    <line x1="320" y1="140" x2="320" y2="160" stroke="#fbbf24" strokeWidth="3" />
-                    <line x1="260" y1="80" x2="240" y2="80" stroke="#fbbf24" strokeWidth="3" />
-                    <line x1="380" y1="80" x2="400" y2="80" stroke="#fbbf24" strokeWidth="3" />
-                  </g>
-                </g>
-
-                {/* Hills */}
-                <path 
-                  d="M0 300 Q100 250 200 280 Q300 250 400 300 L400 400 L0 400 Z" 
-                  className="fill-forest-200 dark:fill-forest-700"
-                />
-                <path 
-                  d="M0 320 Q150 280 250 310 Q350 280 400 320 L400 400 L0 400 Z" 
-                  className="fill-forest-300 dark:fill-forest-600"
-                />
-
-                {/* Mike */}
-                <g transform="translate(160, 180)">
-                  {/* Head */}
-                  <circle cx="50" cy="30" r="25" className="fill-amber-200" />
-                  <circle cx="42" cy="28" r="3" className="fill-neutral-800" />
-                  <circle cx="58" cy="28" r="3" className="fill-neutral-800" />
-                  <path d="M42 40 Q50 48 58 40" className="stroke-neutral-800 stroke-2 fill-none" />
-                  <path d="M30 20 Q50 10 70 20" className="fill-wood-600" />
-                  
-                  {/* Hat */}
-                  <ellipse cx="50" cy="8" rx="28" ry="8" className="fill-wood-700" />
-                  
-                  {/* Body */}
-                  <rect x="30" y="55" width="40" height="50" rx="5" className="fill-sky-DEFAULT" />
-                  
-                  {/* Waving arm */}
-                  <g className="origin-[50px_55px] animate-wave">
-                    <ellipse cx="85" cy="45" rx="12" ry="8" className="fill-sky-DEFAULT" />
-                    <circle cx="95" cy="38" r="8" className="fill-amber-200" />
-                  </g>
-                  
-                  {/* Other arm */}
-                  <ellipse cx="15" cy="70" rx="12" ry="8" className="fill-sky-DEFAULT" />
-                  <circle cx="5" cy="70" r="8" className="fill-amber-200" />
-                  
-                  {/* Legs */}
-                  <rect x="33" y="105" width="14" height="35" rx="3" className="fill-sky-DEFAULT" />
-                  <rect x="53" y="105" width="14" height="35" rx="3" className="fill-sky-DEFAULT" />
-                  <ellipse cx="40" cy="145" rx="12" ry="6" className="fill-wood-700" />
-                  <ellipse cx="60" cy="145" rx="12" ry="6" className="fill-wood-700" />
-                </g>
-
-                {/* Flowers */}
-                <g className="animate-float [animation-delay:1s]">
-                  <circle cx="50" cy="350" r="8" className="fill-pink-300" />
-                  <circle cx="50" cy="350" r="4" className="fill-yellow-400" />
-                </g>
-                <g className="animate-float [animation-delay:2s]">
-                  <circle cx="350" cy="340" r="6" className="fill-red-400" />
-                  <circle cx="350" cy="340" r="3" className="fill-yellow-400" />
-                </g>
-              </svg>
+    <section id="about" className="py-24 md:py-32 px-6 md:px-12 bg-wood-dark">
+      <div className="max-w-6xl mx-auto">
+        <div className="grid lg:grid-cols-2 gap-16 lg:gap-20 items-center">
+          <FadeIn>
+            <div>
+              <span className="font-body text-[11px] tracking-[4px] uppercase text-accent-green block mb-4">
+                About
+              </span>
+              <h2 className="font-heading text-4xl md:text-5xl lg:text-6xl font-black text-cream leading-tight mb-8">
+                Just One<br />
+                <span className="text-accent-green italic">Hardworking</span><br />
+                Guy
+              </h2>
+              <p className="font-body text-[17px] text-[rgba(250,247,242,0.7)] leading-relaxed mb-6 font-light">
+                No crew, no overhead, no runaround. Just Mike showing up when he says he will and getting the job done right. I'm your neighbor in Adams County — I care about this community and the people in it.
+              </p>
+              <p className="font-body text-[17px] text-[rgba(250,247,242,0.7)] leading-relaxed font-light">
+                You tell me what needs doing, I show up, and you pay when you're happy. Simple as that.
+              </p>
             </div>
-          </div>
-
-          {/* Content */}
-          <div className="order-1 lg:order-2">
-            <span className="font-display text-xl text-primary">About</span>
-            <h2 className="font-heading text-4xl md:text-5xl font-semibold mt-2 mb-6">
-              Just One Hardworking Guy
-            </h2>
-            <p className="text-xl font-semibold text-primary mb-4">
-              No crew. No overhead. No runaround.
-            </p>
-            <p className="text-lg text-muted-foreground mb-8">
-              Just Mike showing up on time and getting the job done right. 
-              Serving Adams County, Wisconsin neighbors since 2025.
-            </p>
-
-            {/* Features */}
-            <div className="space-y-4">
-              {features.map((feature, index) => (
-                <div key={index} className="flex items-start gap-4">
-                  <div className="flex-shrink-0 w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
-                    <CheckCircle2 className="w-5 h-5 text-primary" />
+          </FadeIn>
+          
+          <FadeIn delay={0.2}>
+            <div className="grid grid-cols-2 gap-[2px]">
+              {features.map((item, i) => (
+                <div 
+                  key={i}
+                  className="bg-white/[0.04] border border-white/[0.06] p-6 md:p-8"
+                >
+                  <div className="font-heading text-base font-bold text-accent-green mb-2">
+                    {item.label}
                   </div>
-                  <div>
-                    <h3 className="font-semibold text-lg">{feature.title}</h3>
-                    <p className="text-muted-foreground">{feature.description}</p>
+                  <div className="font-body text-[13px] text-[rgba(250,247,242,0.5)] leading-relaxed">
+                    {item.sub}
                   </div>
                 </div>
               ))}
             </div>
-          </div>
+          </FadeIn>
         </div>
       </div>
     </section>

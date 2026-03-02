@@ -1,105 +1,126 @@
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
-import { 
-  Leaf, 
-  Flower2, 
-  TreeDeciduous, 
-  PanelTop, 
-  Warehouse, 
-  Dumbbell 
-} from 'lucide-react'
+'use client'
+
+import { useEffect, useRef, useState } from 'react'
 
 const services = [
   {
-    icon: Leaf,
-    title: 'Yard Cleanup & Debris Removal',
-    description: 'Leaves, branches, and clutter — gone. Your yard, spotless.',
-    price: 'From $50',
-    size: 'large'
+    title: "Yard Cleanup & Debris Removal",
+    desc: "Leaves, branches, winter mess — gone. Your yard, restored.",
+    price: "From $50",
+    icon: "🍂",
+    accent: "#4a7c59",
   },
   {
-    icon: Flower2,
-    title: 'Weeding & Garden Prep',
-    description: 'Pull weeds, prep soil. Ready for planting.',
-    price: 'From $40',
-    size: 'normal'
+    title: "Weeding & Garden Bed Prep",
+    desc: "Pull weeds, turn soil, get beds ready for the season.",
+    price: "From $40",
+    icon: "🌱",
+    accent: "#5a8a3a",
   },
   {
-    icon: TreeDeciduous,
-    title: 'Mulching',
-    description: 'You supply, I spread. Easy.',
-    price: 'From $35',
-    size: 'normal'
+    title: "Mulching",
+    desc: "You supply it, I spread it. Perfectly even, every time.",
+    price: "From $35",
+    icon: "🪵",
+    accent: "#7a5c3a",
   },
   {
-    icon: PanelTop,
-    title: 'Window Washing',
-    description: 'Streak-free shine inside and out.',
-    price: 'From $30',
-    size: 'normal'
+    title: "Window Washing",
+    desc: "Streak-free shine, inside and out. Let the light back in.",
+    price: "From $30",
+    icon: "✨",
+    accent: "#3a6a8a",
   },
   {
-    icon: Warehouse,
-    title: 'Garage & Shed Cleaning',
-    description: 'Clear the cobwebs, reclaim space.',
-    price: 'From $50',
-    size: 'normal'
+    title: "Garage, Shed & Porch Cleaning",
+    desc: "Clear the clutter, reclaim your space. No job too messy.",
+    price: "From $50",
+    icon: "🏡",
+    accent: "#8a5a3a",
   },
   {
-    icon: Dumbbell,
-    title: 'Moving, Lifting & Odd Jobs',
-    description: 'Heavy lifting? Random tasks? Mike\'s got it.',
-    price: '$25/hour',
-    size: 'wide'
+    title: "Moving, Lifting & Odd Jobs",
+    desc: "Heavy lifting, random tasks, whatever needs doing. Just ask.",
+    price: "$25/hr",
+    icon: "💪",
+    accent: "#6a4a7a",
   },
 ]
 
+function useInView(threshold = 0.15) {
+  const ref = useRef<HTMLDivElement>(null)
+  const [inView, setInView] = useState(false)
+
+  useEffect(() => {
+    const obs = new IntersectionObserver(
+      ([e]) => {
+        if (e.isIntersecting) {
+          setInView(true)
+          obs.disconnect()
+        }
+      },
+      { threshold }
+    )
+    if (ref.current) obs.observe(ref.current)
+    return () => obs.disconnect()
+  }, [])
+
+  return [ref, inView] as const
+}
+
+function FadeIn({ children, delay = 0 }: { children: React.ReactNode; delay?: number }) {
+  const [ref, inView] = useInView()
+  
+  return (
+    <div
+      ref={ref}
+      style={{
+        opacity: inView ? 1 : 0,
+        transform: inView ? 'translateY(0)' : 'translateY(32px)',
+        transition: `opacity 0.8s ease ${delay}s, transform 0.8s ease ${delay}s`,
+      }}
+    >
+      {children}
+    </div>
+  )
+}
+
 export function ServicesSection() {
   return (
-    <section id="services" className="py-24 bg-muted/30">
-      <div className="container mx-auto px-4">
-        {/* Header */}
-        <div className="text-center mb-16">
-          <span className="font-display text-xl text-primary">What I Do</span>
-          <h2 className="font-heading text-4xl md:text-5xl font-semibold mt-2 mb-4">Services</h2>
-          <p className="text-muted-foreground text-lg max-w-xl mx-auto">
-            No job too small, no task too tall
-          </p>
-        </div>
-
-        {/* Bento Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto">
-          {services.map((service, index) => {
-            const Icon = service.icon
-            return (
-              <Card 
-                key={index}
-                className={`group relative overflow-hidden transition-all hover:-translate-y-2 hover:shadow-xl ${
-                  service.size === 'large' ? 'lg:col-span-2 lg:grid lg:grid-cols-2 lg:gap-6' : ''
-                } ${
-                  service.size === 'wide' ? 'lg:col-span-2' : ''
-                }`}
+    <section id="services" className="py-24 md:py-32 px-6 md:px-12 bg-cream">
+      <div className="max-w-6xl mx-auto">
+        <FadeIn>
+          <div className="mb-16 md:mb-20">
+            <span className="font-body text-[11px] tracking-[4px] uppercase text-wood-light block mb-4">
+              What I do
+            </span>
+            <h2 className="font-heading text-4xl md:text-5xl lg:text-6xl font-black text-wood-dark leading-tight">
+              Services
+            </h2>
+            <div className="w-16 h-[3px] bg-accent-green mt-5" />
+          </div>
+        </FadeIn>
+        
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-[2px]">
+          {services.map((s, i) => (
+            <FadeIn key={i} delay={i * 0.08}>
+              <div 
+                className="service-card bg-white border border-[#e8e0d0] p-8 md:p-10"
+                style={{ '--accent': s.accent } as React.CSSProperties}
               >
-                {/* Gradient line on hover */}
-                <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-forest-400 via-primary to-forest-400 transform scale-x-0 group-hover:scale-x-100 transition-transform origin-left" />
-                
-                <CardHeader className={service.size === 'large' ? 'lg:justify-center' : ''}>
-                  <div className="w-14 h-14 rounded-2xl bg-primary/10 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
-                    <Icon className="w-7 h-7 text-primary" />
-                  </div>
-                  <CardTitle className="text-xl">{service.title}</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <CardDescription className="text-base mb-4">{service.description}</CardDescription>
-                  <span className="inline-block bg-primary text-primary-foreground px-4 py-1.5 rounded-full text-sm font-semibold">
-                    {service.price}
-                  </span>
-                </CardContent>
-
-                {/* Decorative blob */}
-                <div className="absolute -bottom-12 -right-12 w-32 h-32 bg-primary/5 rounded-full opacity-0 group-hover:opacity-100 transition-opacity" />
-              </Card>
-            )
-          })}
+                <div className="text-3xl mb-5">{s.icon}</div>
+                <h3 className="font-heading text-xl md:text-2xl font-bold text-wood-dark mb-3 leading-snug">
+                  {s.title}
+                </h3>
+                <p className="font-body text-[15px] text-wood leading-relaxed mb-6">
+                  {s.desc}
+                </p>
+                <div className="font-body text-[13px] tracking-[2px] uppercase font-bold" style={{ color: s.accent }}>
+                  {s.price}
+                </div>
+              </div>
+            </FadeIn>
+          ))}
         </div>
       </div>
     </section>

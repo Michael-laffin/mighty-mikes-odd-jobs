@@ -1,142 +1,95 @@
 'use client'
 
-import Link from 'next/link'
-import { useTheme } from 'next-themes'
 import { useState, useEffect } from 'react'
-import { Button } from '@/components/ui/button'
-import { cn } from '@/lib/utils'
-import { Menu, X, Sun, Moon, Phone } from 'lucide-react'
+import { Menu, X } from 'lucide-react'
 
-const navLinks = [
-  { href: '#services', label: 'Services' },
-  { href: '#pricing', label: 'Pricing' },
-  { href: '#about', label: 'About' },
-  { href: '#contact', label: 'Contact' },
-]
+const navItems = ['Services', 'Pricing', 'About', 'Contact']
 
 export function Header() {
-  const [mounted, setMounted] = useState(false)
-  const [isOpen, setIsOpen] = useState(false)
-  const [scrolled, setScrolled] = useState(false)
-  const { theme, setTheme } = useTheme()
+  const [scrollY, setScrollY] = useState(0)
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
 
   useEffect(() => {
-    setMounted(true)
-    
-    const handleScroll = () => {
-      setScrolled(window.scrollY > 50)
-    }
-    
-    window.addEventListener('scroll', handleScroll)
-    return () => window.removeEventListener('scroll', handleScroll)
+    const handler = () => setScrollY(window.scrollY)
+    window.addEventListener('scroll', handler, { passive: true })
+    return () => window.removeEventListener('scroll', handler)
   }, [])
 
+  const navBg = scrollY > 60
+
   return (
-    <header
-      className={cn(
-        'fixed top-0 left-0 right-0 z-50 transition-all duration-300',
-        scrolled 
-          ? 'bg-background/80 backdrop-blur-lg border-b border-border shadow-sm py-2' 
-          : 'bg-transparent py-4'
-      )}
+    <nav 
+      className={`fixed top-0 left-0 right-0 z-50 px-6 md:px-12 py-5 flex items-center justify-between transition-all duration-300 ${
+        navBg 
+          ? 'bg-cream/97 backdrop-blur-xl border-b border-wood-dark/10' 
+          : 'bg-transparent'
+      }`}
     >
-      <nav className="container mx-auto px-4 flex items-center justify-between">
-        {/* Logo */}
-        <Link 
-          href="/" 
-          className="flex items-center gap-2 text-xl font-display font-bold text-foreground hover:text-primary transition-colors"
-        >
-          <span className="text-2xl">🧹</span>
-          <span className="hidden sm:inline">Mighty Mike&apos;s</span>
-        </Link>
-
-        {/* Desktop Nav */}
-        <div className="hidden md:flex items-center gap-6">
-          {navLinks.map((link) => (
-            <Link
-              key={link.href}
-              href={link.href}
-              className="text-muted-foreground hover:text-foreground transition-colors font-medium"
-            >
-              {link.label}
-            </Link>
-          ))}
-          
-          <Button asChild size="lg" className="gap-2">
-            <a href="tel:608-403-2930">
-              <Phone className="w-4 h-4" />
-              Call Now
-            </a>
-          </Button>
-
-          {/* Theme Toggle */}
-          {mounted && (
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
-              aria-label="Toggle theme"
-            >
-              {theme === 'dark' ? (
-                <Sun className="w-5 h-5" />
-              ) : (
-                <Moon className="w-5 h-5" />
-              )}
-            </Button>
-          )}
-        </div>
-
-        {/* Mobile Menu Button */}
-        <div className="flex items-center gap-2 md:hidden">
-          {mounted && (
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
-              aria-label="Toggle theme"
-            >
-              {theme === 'dark' ? (
-                <Sun className="w-5 h-5" />
-              ) : (
-                <Moon className="w-5 h-5" />
-              )}
-            </Button>
-          )}
-          
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={() => setIsOpen(!isOpen)}
-            aria-label="Toggle menu"
+      <a 
+        href="#"
+        className="font-heading font-black text-lg tracking-wide"
+        style={{ color: navBg ? '#2c2416' : '#faf7f2' }}
+      >
+        Mighty Mike's
+      </a>
+      
+      {/* Desktop nav */}
+      <div className="hidden md:flex items-center gap-10">
+        {navItems.map(item => (
+          <a 
+            key={item}
+            href={`#${item.toLowerCase()}`}
+            className="font-body text-[13px] tracking-[2px] uppercase transition-colors hover:text-wood-light"
+            style={{ color: navBg ? '#2c2416' : 'rgba(250,247,242,0.85)' }}
           >
-            {isOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
-          </Button>
-        </div>
-      </nav>
-
-      {/* Mobile Menu */}
-      {isOpen && (
-        <div className="md:hidden bg-background/95 backdrop-blur-lg border-b border-border">
-          <div className="container mx-auto px-4 py-4 flex flex-col gap-4">
-            {navLinks.map((link) => (
-              <Link
-                key={link.href}
-                href={link.href}
-                className="text-lg font-medium text-foreground hover:text-primary transition-colors py-2"
-                onClick={() => setIsOpen(false)}
+            {item}
+          </a>
+        ))}
+        <a 
+          href="tel:608-403-2930"
+          className="font-body text-[11px] tracking-[2px] uppercase px-6 py-3 border-2 transition-all hover:opacity-80"
+          style={{
+            background: navBg ? '#2c2416' : 'rgba(250,247,242,0.15)',
+            color: '#faf7f2',
+            borderColor: navBg ? '#2c2416' : 'rgba(250,247,242,0.5)'
+          }}
+        >
+          608-403-2930
+        </a>
+      </div>
+      
+      {/* Mobile menu button */}
+      <button 
+        onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+        className="md:hidden p-2"
+        style={{ color: navBg ? '#2c2416' : '#faf7f2' }}
+      >
+        {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+      </button>
+      
+      {/* Mobile menu */}
+      {mobileMenuOpen && (
+        <div className="absolute top-full left-0 right-0 bg-cream border-b border-wood-dark/10 p-6 md:hidden">
+          <div className="flex flex-col gap-4">
+            {navItems.map(item => (
+              <a 
+                key={item}
+                href={`#${item.toLowerCase()}`}
+                onClick={() => setMobileMenuOpen(false)}
+                className="font-body text-[13px] tracking-[2px] uppercase text-wood-dark hover:text-wood-light transition-colors"
               >
-                {link.label}
-              </Link>
-            ))}
-            <Button asChild size="lg" className="gap-2 mt-2">
-              <a href="tel:608-403-2930">
-                <Phone className="w-4 h-4" />
-                Call Now
+                {item}
               </a>
-            </Button>
+            ))}
+            <a 
+              href="tel:608-403-2930"
+              className="font-body text-[11px] tracking-[2px] uppercase px-6 py-3 bg-wood-dark text-cream border-2 border-wood-dark text-center mt-2"
+            >
+              608-403-2930
+            </a>
           </div>
         </div>
       )}
-    </header>
+    </nav>
   )
 }

@@ -8,15 +8,17 @@ const config: Config = {
     './src/app/**/*.{js,ts,jsx,tsx,mdx}',
   ],
   theme: {
-    container: {
-      center: true,
-      padding: '2rem',
-      screens: {
-        '2xl': '1400px',
-      },
-    },
     extend: {
       colors: {
+        cream: '#faf7f2',
+        'forest-dark': '#1a2e1a',
+        'forest-mid': '#2d4a1e',
+        forest: '#4a7c3a',
+        'forest-light': '#6aaa4a',
+        'accent-green': '#a8d878',
+        'wood-dark': '#2c2416',
+        wood: '#6a5a45',
+        'wood-light': '#8a7a5a',
         border: 'hsl(var(--border))',
         input: 'hsl(var(--input))',
         ring: 'hsl(var(--ring))',
@@ -50,38 +52,6 @@ const config: Config = {
           DEFAULT: 'hsl(var(--card))',
           foreground: 'hsl(var(--card-foreground))',
         },
-        // Custom Mighty Mike colors
-        forest: {
-          50: '#f0fdf4',
-          100: '#dcfce7',
-          200: '#bbf7d0',
-          300: '#86efac',
-          400: '#4ade80',
-          500: '#6b9e5f',
-          600: '#3d5c36',
-          700: '#2d4429',
-          800: '#1e2d1c',
-          900: '#0f1a0e',
-        },
-        wood: {
-          50: '#fdf8f0',
-          100: '#f5e6d3',
-          200: '#e8c9a0',
-          300: '#d4a574',
-          400: '#c4854a',
-          500: '#8b5a2b',
-          600: '#724622',
-          700: '#5c3d1e',
-          800: '#4a3118',
-          900: '#3d2815',
-        },
-        sky: {
-          light: '#87ceeb',
-          DEFAULT: '#4a7c9b',
-          dark: '#3a6a8a',
-        },
-        cream: '#faf6e9',
-        earth: '#d4a574',
       },
       borderRadius: {
         lg: 'var(--radius)',
@@ -89,9 +59,8 @@ const config: Config = {
         sm: 'calc(var(--radius) - 4px)',
       },
       fontFamily: {
-        display: ['Caveat', 'cursive'],
-        heading: ['Newsreader', 'serif'],
-        sans: ['Inter', 'sans-serif'],
+        heading: ['Playfair Display', 'serif'],
+        body: ['Lato', 'sans-serif'],
       },
       keyframes: {
         'accordion-down': {
@@ -104,34 +73,21 @@ const config: Config = {
         },
         float: {
           '0%, 100%': { transform: 'translateY(0)' },
-          '50%': { transform: 'translateY(-20px)' },
+          '50%': { transform: 'translateY(-10px)' },
         },
-        'blob-float': {
-          '0%, 100%': { transform: 'translate(0, 0) scale(1)' },
-          '25%': { transform: 'translate(30px, -50px) scale(1.1)' },
-          '50%': { transform: 'translate(-20px, 20px) scale(0.9)' },
-          '75%': { transform: 'translate(40px, 30px) scale(1.05)' },
-        },
-        'sign-swing': {
-          '0%, 100%': { transform: 'rotate(-0.5deg)' },
-          '50%': { transform: 'rotate(0.5deg)' },
-        },
-        wave: {
-          '0%, 100%': { transform: 'rotate(-10deg)' },
-          '50%': { transform: 'rotate(10deg)' },
+        'scroll-pulse': {
+          '0%, 100%': { opacity: '0.5' },
+          '50%': { opacity: '1' },
         },
       },
       animation: {
         'accordion-down': 'accordion-down 0.2s ease-out',
         'accordion-up': 'accordion-up 0.2s ease-out',
         float: 'float 6s ease-in-out infinite',
-        'blob-float': 'blob-float 20s ease-in-out infinite',
-        'sign-swing': 'sign-swing 4s ease-in-out infinite',
-        wave: 'wave 1s ease-in-out infinite',
+        'scroll-pulse': 'scroll-pulse 2s infinite',
       },
     },
   },
   plugins: [require('tailwindcss-animate')],
 }
-
 export default config
